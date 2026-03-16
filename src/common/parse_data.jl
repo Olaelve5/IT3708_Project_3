@@ -11,13 +11,16 @@ function parse_file(filepath)
     num_features = log2(num_combinations+1)
 
     # 1D array to store the final fitness values
-    fitness_landscape = zeros(Float64, num_combinations)
+    fitness_landscape = Vector{Float64}(undef, num_combinations)
+    accuracy_vector = Vector{Float64}(undef, num_combinations)
+
 
     for i in 1:num_combinations
         h_a = mean(accuracy_matrix[i, :])
+        accuracy_vector[i] = h_a
         h_p = count_ones(i) 
         fitness_landscape[i] = h_a - (epsilon * h_p)
     end
     
-    return fitness_landscape, num_features
+    return accuracy_vector, fitness_landscape, num_features
 end
