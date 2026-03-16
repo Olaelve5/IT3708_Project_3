@@ -1,10 +1,10 @@
 using Plots
-include("../parse_data.jl")
+include("../common/parse_data.jl")
 include("./calculate_optimas.jl")
 
 println("Parsing data...")
 
-landscape = parse_file("train_data/01-breast-w_lr_F.h5")
+landscape, _ = parse_file("train_data/01-breast-w_lr_F.h5")
 #landscape = parse_file("train_data/05-credit-a_rf_F.h5")
 #landscape = parse_file("train_data/08-letter-r_knn_F.h5")
 
