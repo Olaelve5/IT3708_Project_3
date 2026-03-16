@@ -10,10 +10,11 @@ using .PSO
 data_path = "./train_data/01-breast-w_lr_F.h5" # 01-breast-w_lr_F.h5 | 05-credit-a_rf_F.h5 | 08-letter-r_knn_F.h5
 
 # Get fitness landscape and number of instance features from dataset
-fitness_landscape, n_features = parse_file(data_path)
+accuracy_vector, fitness_landscape, n_features = parse_file(data_path)
 
 # Make and evaluate function that remembers fitness landscape
 evaluate = make_evaluate(fitness_landscape)
+nsga_evaluate =  make_evaluate(accuracy_vector)
 
 # Instantiate config files with instance specifics
 nsga_cfg = NSGAConfig(n_features = n_features, evaluate = evaluate)
