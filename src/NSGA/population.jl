@@ -7,7 +7,7 @@ mutable struct Individual
 end
 
 function new_individual(chromosome::Bitvector, accuracy::Float64)::Individual
-    return Individual(chromosome, accuracy, sum(chromosome), 0, 0.0)
+    return Individual(chromosome, accuracy, count_ones(chromosome), 0, 0.0)
 end
 
 function init_pop(pop_size::Int, n_features::Int, evaluate::Function)::Vector{Individual}
