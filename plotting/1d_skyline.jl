@@ -2,8 +2,8 @@ using Plots
 include("../parse_data.jl")
 include("./calculate_optimas.jl")
 
+landscape = parse_file("train_data/05-credit-a_rf_F.h5")
 
-landscape = parse_file("train_data/01-breast-w_lr_F.h5")
 n_combinations = length(landscape)
 n_features = round(Int, log2(n_combinations + 1)) 
 optima_indices = calculate_optimas(landscape)
