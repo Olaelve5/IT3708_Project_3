@@ -1,2 +1,3 @@
 [deps]
+EvoLP = "71f1f4bb-392f-41f8-8452-d535d061e0f4"
 HDF5 = "f67ccb44-e63f-5c2f-98bd-6dc0ccc4ba2f"
