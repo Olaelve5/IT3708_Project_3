@@ -1,18 +1,25 @@
-include("../common/common.jl")
-include("../common/config.jl")
+using Parameters
+
 include("./population.jl")
+include("non_dominated_sorting.jl")
+include("crowding_distance.jl")
 
-population = generate_population(POP_SIZE, 9)
-# TODO: Call load function ??
+function run_nsga(cfg::NSGAConfig)
+    @unpack pop_size, n_features, evaluate = cfg
 
-while !finished
-    # TODO: Perform non-dominated sorting
-    # TODO: Compute crowding distance
-    # TODO: Select parents (tournament)
-    # TODO: Crossover
-    # TODO: Mutation
-    # TODO: Evaluate offspring
-    # TODO: Combine parent + offspring populations
-    # TODO: Sort again
-    # TODO: Select next generation
+    population = init_pop(pop_size, n_features, evaluate)
+
+    while !finished
+        # Perform non-dominated sorting
+        nd_sort!(population)
+        # TODO: Compute crowding distance
+        crowding_distance!(population)
+        # TODO: Select parents (tournament)
+        # TODO: Crossover
+        # TODO: Mutation
+        # TODO: Evaluate offspring
+        # TODO: Combine parent + offspring populations
+        # TODO: Sort again
+        # TODO: Select next generation
+    end
 end
