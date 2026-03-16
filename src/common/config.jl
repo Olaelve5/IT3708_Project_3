@@ -1,25 +1,12 @@
 using Parameters
 
-struct PSOConfig
-	num_particles::Int
-	num_features::Int
-	num_iterations::Int
-	inertia_weight::Float64
-	cognitive_coefficient::Float64
-	social_coefficient::Float64
-end
-
-function PSOConfig(;
-	num_particles = 30,
-	num_features, num_iterations = 30,
-	inertia_weight = 0.7,
-	cognitive_coefficient = 1.5,
-	social_coefficient = 1.5 
-	)
-	@assert n_particles > 0 "num_particles must be positive"
-	@assert n_features > 0 "num_features must be positive"
-	@assert 0 < inertia < 1 "inertia_weight must be between 0 and 1"
-	PSOConfig(num_particles, num_features, num_iterations, inertia_weight, cognitive_coefficient, social_coefficient)
+@with_kw struct SGAConfig
+    pop_size::Int = 1000
+    num_gens::Int = 50
+    tournament_size::Int = 3
+    mutation_rate::Float64 = 0.01
+    crossover_rate::Float64 = 0.8
+    elitism::Bool = true
 end
 
 @with_kw struct NSGAConfig
@@ -27,4 +14,14 @@ end
     tournament_size::Int = 3,
     n_features::Int,
     evaluate::Function
+end
+
+
+@with_kw struct PSOConfig
+    num_particles::Int = 30
+    num_features::Int
+    num_iterations::Int = 30
+    inertia_weight::Float64 = 0.7
+    cognitive_coefficient::Float64 = 1.5
+    social_coefficient::Float64 = 1.5
 end
