@@ -1,8 +1,8 @@
 using Plots
-include("../parse_data.jl")
+include("../common/parse_data.jl")
 
 println("Parsing data...")
-landscape = parse_file("train_data/05-credit-a_rf_F.h5")
+landscape, _ = parse_file("train_data/05-credit-a_rf_F.h5")
 n_combinations = length(landscape)
 
 feature_counts = Int[]

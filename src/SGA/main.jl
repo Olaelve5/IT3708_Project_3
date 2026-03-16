@@ -1,44 +1,67 @@
 using EvoLP
-include("../common/common.jl")
+using Parameters
+include("../common/population.jl")
 include("../common/parse_data.jl")
-
-landscape = parse_file("train_data/05-credit-a_rf_F.h5")
-
-POP_SIZE = 1000
-N_FEATURES = round(Int, log2(length(landscape) + 1))
+include("../common/evaluation.jl")
+include("../common/config.jl")
 
 
-function SGA(pop_size::Int, tournament_size::Int, eval_func::Function, num_gens::Int, num_features::Int)
+function SGA(config::SGAConfig, eval_func::Function, num_features::Int)
+    @unpack pop_size, num_gens, tournament_size, mutation_rate, crossover_rate, elitism = config
+
+    S = TournamentSelector(tournament_size)
+    M = BitwiseMutator(mutation_rate)
+    C = UniformRecombinator()
+
     population = generate_population(pop_size, num_features)
 
     for gen in 1:num_gens
-        println("Generation $gen")
         fitnesses = [eval_func(ind) for ind in population]
+
+        best_idx = argmax(fitnesses)
+        best_gen_fitness = fitnesses[best_idx]
+        champion = copy(population[best_idx])
+        println("Generation $gen | Best Fitness: $best_gen_fitness")
         
-        new_population = BitVector[]
+        new_population = elitism ? BitVector[champion] : BitVector[]
         
         for _ in 1:pop_size
-            parent1 = tournament_selection(population, fitnesses, tournament_size)
-            parent2 = tournament_selection(population, fitnesses, tournament_size)
+            parent_indices = select(S, fitnesses)
+
+            if rand() < crossover_rate
+                child = cross(C, population[parent_indices[1]], population[parent_indices[2]])
+            else
+                child = copy(population[parent_indices[1]])
+            end
             
-            child = uniform_crossover(parent1, parent2)
-            child = bitflip_mutation(child, 0.01)
-            
+            child = mutate(M, child)
             push!(new_population, child)
         end
         
         population = new_population
     end
     
-    # return the best solution found
     final_fitnesses = [eval_func(ind) for ind in population]
     best_idx = argmax(final_fitnesses)
-    println("Best solution found: ", population[best_idx], " with fitness ", final_fitnesses[best_idx])
     
-    return population[best_idx], final_fitnesses[best_idx]
+    println("--- Evolution Complete ---")
+    println("Best Fitness: ", final_fitnesses[best_idx])
     
+    return population[best_idx], final_fitnesses[best_idx] 
 end
 
 
-SGA(POP_SIZE, TOURNAMENT_SIZE, ind -> landscape[parse(Int, string(ind), base=2)], 50, N_FEATURES)
+config = SGAConfig(
+    pop_size = 1000,
+    num_gens = 1000,
+    tournament_size = 5,
+    mutation_rate = 0.01,
+    crossover_rate = 0.8,
+    elitism = true
+)
 
+#landscape, N_FEATURES = parse_file("train_data/05-credit-a_rf_F.h5")
+landscape, N_FEATURES = parse_file("train_data/01-breast-w_lr_F.h5")
+eval_func = make_evaluate(landscape)
+
+best_solution, best_fitness = SGA(config, eval_func, Int(N_FEATURES))
