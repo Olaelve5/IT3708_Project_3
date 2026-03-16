@@ -1,3 +1,5 @@
+using Parameters
+
 struct PSOConfig
     num_particles::Int
     num_features::Int
@@ -18,4 +20,9 @@ function PSOConfig(;
   @assert n_features > 0 "num_features must be positive"
   @assert 0 < inertia < 1 "inertia_weight must be between 0 and 1"
   PSOConfig(num_particles, num_features, num_iterations, inertia_weight, cognitive_coefficient, social_coefficient)
+end
+
+@with_kw struct NSGAConfig
+    pop_size::Int = 1000,
+    tournament_size::Int = 3
 end
