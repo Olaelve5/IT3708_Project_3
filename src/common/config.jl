@@ -16,7 +16,6 @@ end
     evaluate::Function
 end
 
-
 @with_kw struct PSOConfig
     num_particles::Int = 30
     num_features::Int
@@ -24,4 +23,5 @@ end
     inertia_weight::Float64 = 0.7
     cognitive_coefficient::Float64 = 1.5
     social_coefficient::Float64 = 1.5
+	evaluate::Function
 end
