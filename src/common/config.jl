@@ -10,8 +10,10 @@ using Parameters
 end
 
 @with_kw struct NSGAConfig
-    pop_size::Int = 1000
-    tournament_size::Int = 3
+    pop_size::Int = 1000,
+    tournament_size::Int = 3,
+    n_features::Int,
+    evaluate::Function
 end
 
 
