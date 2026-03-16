@@ -1,11 +1,10 @@
-include("../common/common.jl")
 include("../common/config.jl")
-include("./population.jl")
+include("../common/population.jl")
 
-population = generate_population(POP_SIZE, 9)
+#population = generate_population(POP_SIZE, 9)
 # TODO: Call load function ??
 
-while !finished
+#while !finished
     # TODO: Perform non-dominated sorting
     # TODO: Compute crowding distance
     # TODO: Select parents (tournament)
@@ -15,4 +14,4 @@ while !finished
     # TODO: Combine parent + offspring populations
     # TODO: Sort again
     # TODO: Select next generation
-end
+#end

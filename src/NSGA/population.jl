@@ -1,12 +1,12 @@
 struct Individual
-    genome::Bitvector
+    genome::BitVector
     accuracy::Float64
     num_features::Int
     rank::Int
     crowding_distance::Float64
 end
 
-function new_individual(chromosome::Bitvector)::Individual
+function new_individual(chromosome::BitVector)::Individual
     return Individual(chromosome, 0.0, sum(chromosome), 0, 0.0)
 end
 
