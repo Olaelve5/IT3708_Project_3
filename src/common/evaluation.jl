@@ -13,13 +13,6 @@ function make_evaluate(fitness_landscape::Vector{Float64})
             return 0.0
         end
         
-        # Handle out-of-bounds indices
-        if index <= max_idx
-            return fitness_landscape[index]
-        else
-            return 0.0
-        end
-        
         return fitness_landscape[index]
     end
 
