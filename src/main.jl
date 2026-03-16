@@ -1,9 +1,10 @@
 include("common/parse_data.jl")
 include("common/evaluation.jl")
+include("common/config.jl")
 include("NSGA/nsga.jl")
 
 # Parameters
-data_path = "./01-breast-w_lr_F.h5" # 01-breast-w_lr_F.h5 | 05-credit-a_rf_F.h5 | 08-letter-r_knn_F.h5
+data_path = "./train_data/01-breast-w_lr_F.h5" # 01-breast-w_lr_F.h5 | 05-credit-a_rf_F.h5 | 08-letter-r_knn_F.h5
 
 # Get fitness landscape and number of instance features from dataset
 accuracy_vector, fitness_landscape, n_features = parse_file(data_path)
