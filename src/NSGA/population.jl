@@ -2,10 +2,10 @@ mutable struct Individual
     genome::BitVector
     accuracy::Float64
     num_features::Int
-    rank::Int
+    rank::Int # Assigned rank
     crowding_distance::Float64
-    S_p::Vector{Individual}
-    n_p::Int
+    S_p::Vector{Individual} # Dominated solutions
+    n_p::Int # n individuals dominating self
 end
 
 function new_individual(chromosome::BitVector, accuracy::Float64)::Individual

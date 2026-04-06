@@ -6,7 +6,7 @@ function dominates(A::Individual, B::Individual)::Bool
     return better_or_equal_all && strictly_better_one
 end
 
-function nd_sort!(population::Vector{Individual})
+function fnd_sort!(population::Vector{Individual}, pop_size::Int)
     # Reset values from previous sorts, if any.
     for p in population
         p.n_p = 0
@@ -14,6 +14,7 @@ function nd_sort!(population::Vector{Individual})
     end
 
     Fi = Individual[]
+    count = 0
     for p in population
         np = 0
         for q in population
@@ -30,8 +31,9 @@ function nd_sort!(population::Vector{Individual})
             push!(Fi, p)
         end
     end
+    count += length(Fi)
     i = 2
-    while !isempty(Fi)
+    while !isempty(Fi) && count < pop_size
         Q = Individual[]
         for p in Fi
             Sp = p.S_p
@@ -45,5 +47,6 @@ function nd_sort!(population::Vector{Individual})
         end
         i += 1
         Fi = Q
+        count += length(Q)
     end
 end
