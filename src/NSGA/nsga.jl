@@ -9,7 +9,8 @@ function run_nsga(cfg::NSGAConfig)
     @unpack pop_size, n_features, evaluate, tournament_size, crossover_rate, mutation_rate = cfg
 
     # Define genetic operators
-    const SELECTOR = NSGATournament(tournament_size)
+    SELECTOR = NSGATournament(tournament_size)
+    MUTATOR = EvoLP.BitwiseMutator(mutation_rate)
 
     # Generate, sort and evaluate initial parent population
     parents = init_pop(pop_size, n_features, evaluate)
@@ -18,7 +19,7 @@ function run_nsga(cfg::NSGAConfig)
 
     # Generate initial offspring population from initial parent population
     offspring = Vector{Individual}(undef, pop_size)
-    generate_offspring!(parents, offspring, SELECTOR, crossover_rate, mutation_rate)
+    generate_offspring!(parents, offspring, SELECTOR, crossover_rate, MUTATOR, evaluate)
 
     # Initialize reusable vectors for population in algorithm
     population = Vector{Individual}(undef, 2*pop_size)
@@ -39,24 +40,36 @@ function run_nsga(cfg::NSGAConfig)
         # Create next parent generation based on rank and crowding
         next_idx = 1
         i = 1
-        while length(new_parents) < pop_size
+        while next_idx <= pop_size
             front_i = [p for p in population if p.rank == i]
-            # Compute per front crowding distance
-            crowding_distance!(front_i)
-            for p in front_i
-                next_idx > pop_size && break
-                new_parents[next_idx] = p
-                next_idx += 1
+            isempty(front_i) && break
+
+            # If front doesnt fit, sort and keep best
+            if next_idx + length(front_i) - 1 > pop_size
+                # Compute per front crowding distance
+                front_crowding_distance!(front_i)
+                sort!(front_i, by = p -> p.crowding_distance, rev=true)
+                remaining = pop_size - next_idx + 1
+                for j in 1:remaining
+                    new_parents[next_idx] = front_i[j]
+                    next_idx += 1
+                end
+            else
+                for p in front_i
+                    new_parents[next_idx] = p
+                    next_idx += 1
+                end
             end
             i += 1
         end
 
-        generate_offspring!(new_parents, offspring, SELECTOR, crossover_rate, mutation_rate)
-        # TODO: Evaluate offspring
-        # TODO: Sort again
-        # TODO: Select next generation
+        # Generate offspring for next generation
+        generate_offspring!(new_parents, offspring, SELECTOR, crossover_rate, MUTATOR, evaluate)
+
+        parents .= new_parents
         if something
             finished = true
         end
     end
+    return parents
 end

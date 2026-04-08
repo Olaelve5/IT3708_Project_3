@@ -5,7 +5,7 @@ include("NSGA/nsga.jl")
 include("PSO/pso.jl")
 include("./common/config.jl")
 
-using .PSO
+# using .PSO
 
 # Parameters
 data_path = "./train_data/01-breast-w_lr_F.h5" # 01-breast-w_lr_F.h5 | 05-credit-a_rf_F.h5 | 08-letter-r_knn_F.h5
@@ -13,7 +13,7 @@ data_path = "./train_data/01-breast-w_lr_F.h5" # 01-breast-w_lr_F.h5 | 05-credit
 # Get fitness landscape and number of instance features from dataset
 accuracy_vector, fitness_landscape, n_features = parse_file(data_path)
 
-# Make and evaluate function that remembers fitness landscape
+# Make an evaluate function that remembers fitness landscape
 evaluate = make_evaluate(fitness_landscape)
 nsga_evaluate =  make_evaluate(accuracy_vector)
 
@@ -28,13 +28,12 @@ pso_cfg = PSOConfig(
     social_coefficient = 1.5,
     evaluate = evaluate
 )
-# TODO: PSO config
 # TODO: SGA config
 
-#run_nsga(nsga_cfg)
+run_nsga(nsga_cfg)
 # TODO: Call PSO
-best_features = run_pso(pso_cfg)
-println("Best feature mask: ", best_features)
-println("Number of features selected: ", sum(best_features))
-println("Fitness: ", pso_cfg.evaluate(best_features))
+# best_features = run_pso(pso_cfg)
+# println("Best feature mask: ", best_features)
+# println("Number of features selected: ", sum(best_features))
+# println("Fitness: ", pso_cfg.evaluate(best_features))
 # TODO: Call SGA

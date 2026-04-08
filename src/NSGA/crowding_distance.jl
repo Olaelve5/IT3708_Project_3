@@ -15,7 +15,7 @@ function front_crowding_distance!(front::Vector{Individual})
         range = get_field(sorted[end]) - get_field(sorted[1])
 
         # Avoid division by zero if all individuals in front have same value
-        range == 0 && contine
+        range == 0 && continue
 
         # Set edges crowding distance to Inf
         sorted[1].crowding_distance = sorted[end].crowding_distance = Inf

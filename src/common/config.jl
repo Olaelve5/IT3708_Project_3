@@ -15,7 +15,7 @@ end
     n_features::Int
     evaluate::Function
     crossover_rate::Float = 0.9
-    mutation_rate::Float = 1/pop_size
+    mutation_rate::Float = 1/n_features
 end
 
 @with_kw struct PSOConfig
