@@ -18,8 +18,9 @@ function init_pop(
     evaluate::Function)::Vector{Individual}
 
     population = Vector{Individual}(undef, pop_size)
-    genes = generate_population(pop_size, n_features)
+    pop_genes = generate_population(pop_size, n_features)
     for i in 1:pop_size
-        population[i] = new_individual(genes[i], evaluate(genes))
+        population[i] = new_individual(pop_genes[i], evaluate(pop_genes[i]))
     end
+    return population
 end
