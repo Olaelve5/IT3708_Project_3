@@ -1,6 +1,7 @@
 include("common/parse_data.jl")
 include("common/evaluation.jl")
 include("common/config.jl")
+include("common/population.jl")
 include("NSGA/nsga.jl")
 include("pso/pso.jl")
 
@@ -29,7 +30,8 @@ pso_cfg = PSOConfig(
 )
 # TODO: SGA config
 
-run_nsga(nsga_cfg)
+nsga_run = run_nsga(nsga_cfg)
+println("NSGA-II returned $(length(nsga_run.pareto_front)) Pareto-front solutions.")
 # TODO: Call PSO
 # best_features = run_pso(pso_cfg)
 # println("Best feature mask: ", best_features)

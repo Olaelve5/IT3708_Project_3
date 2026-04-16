@@ -10,13 +10,14 @@ using Parameters
 end
 
 @with_kw struct NSGAConfig
-    pop_size::Int = 1000
+    pop_size::Int = 50
     num_gens::Int = 1000
     tournament_size::Int = 3
     n_features::Int
     evaluate::Function
     crossover_rate::Float64 = 0.9
     mutation_rate::Float64
+    log_every::Int = 10
 end
 
 @with_kw struct PSOConfig

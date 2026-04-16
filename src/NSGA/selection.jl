@@ -1,4 +1,4 @@
-using EvoLP
+using EvoLP, Random
 
 const CROSSOVER = EvoLP.SinglePointRecombinator()
 
@@ -37,7 +37,7 @@ function generate_offspring!(
     pop_size = length(offspring)
     idx = 1
     while idx < pop_size
-        p1, p2 = EvoLP.select(SELECTOR, parents)
+        p1, p2 = select(SELECTOR, parents)
         if rand() < crossover_rate
             c1_genome = EvoLP.cross(CROSSOVER, p1.genome, p2.genome)
             c2_genome = EvoLP.cross(CROSSOVER, p1.genome, p2.genome)
@@ -54,6 +54,6 @@ function generate_offspring!(
     for p in offspring
         p.genome = EvoLP.mutate(MUTATOR, p.genome)
         p.accuracy = evaluate(p.genome)
-        p.num_features = count_ones(p.genome)
+        p.num_features = count(p.genome)
     end
 end

@@ -4,9 +4,12 @@ include("./population.jl")
 include("fast_non_dominated_sorting.jl")
 include("crowding_distance.jl")
 include("selection.jl")
+include("prints.jl")
 
 function run_nsga(cfg::NSGAConfig)
-    @unpack pop_size, num_gens, n_features, evaluate, tournament_size, crossover_rate, mutation_rate = cfg
+    @unpack pop_size, num_gens, n_features, evaluate, tournament_size, crossover_rate, mutation_rate, log_every = cfg
+
+    print_run_header(cfg)
 
     # Define genetic operators
     SELECTOR = NSGATournament(tournament_size)
@@ -25,6 +28,17 @@ function run_nsga(cfg::NSGAConfig)
     population = Vector{Individual}(undef, 2*pop_size)
     new_parents = Vector{Individual}(undef, pop_size)
 
+    # Time-series used for experiment tables and plotting.
+    f1_size_by_gen = Int[]
+    best_accuracy_by_gen = Float64[]
+    min_features_by_gen = Int[]
+
+    initial_front = rank1_front(parents)
+    initial_stats = front_stats(initial_front)
+    push!(f1_size_by_gen, initial_stats.size)
+    push!(best_accuracy_by_gen, initial_stats.best_accuracy)
+    push!(min_features_by_gen, initial_stats.min_features)
+    print_generation_summary("NSGA-II", 0, initial_front)
 
     gen = 1
     while gen <= num_gens
@@ -69,7 +83,31 @@ function run_nsga(cfg::NSGAConfig)
         generate_offspring!(new_parents, offspring, SELECTOR, crossover_rate, MUTATOR, evaluate)
 
         parents .= new_parents
+
+        current_front = rank1_front(parents)
+        current_stats = front_stats(current_front)
+        push!(f1_size_by_gen, current_stats.size)
+        push!(best_accuracy_by_gen, current_stats.best_accuracy)
+        push!(min_features_by_gen, current_stats.min_features)
+
+        if gen % log_every == 0 || gen == num_gens
+            print_generation_summary("NSGA-II", gen, current_front)
+        end
+
         gen += 1
     end
-    return parents
+
+    final_front = rank1_front(parents)
+    print_final_summary(final_front)
+
+    return (
+        final_population = parents,
+        pareto_front = final_front,
+        representative = representative_solution(final_front),
+        history = (
+            f1_size_by_gen = f1_size_by_gen,
+            best_accuracy_by_gen = best_accuracy_by_gen,
+            min_features_by_gen = min_features_by_gen
+        )
+    )
 end
