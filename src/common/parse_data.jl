@@ -1,7 +1,7 @@
 using HDF5
 using Statistics
 
-function parse_file(filepath; epsilon=0.1)
+function parse_file(filepath; epsilon=0.01)
     file = h5open(filepath, "r")
     accuracy_matrix = read(file["accuracies"])
     close(file)
