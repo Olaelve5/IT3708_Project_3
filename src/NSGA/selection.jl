@@ -6,7 +6,7 @@ function best_rank_crowding(p::Individual, q::Individual)::Bool
     p.rank < q.rank || (p.rank == q.rank && p.crowding_distance > q.crowding_distance)
 end
 
-struct NSGATournament <: ParentSelector
+struct NSGATournament <: EvoLP.ParentSelector
     T::Int
 end
 

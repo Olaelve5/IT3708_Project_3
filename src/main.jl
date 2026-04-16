@@ -18,7 +18,7 @@ evaluate = make_evaluate(fitness_landscape)
 nsga_evaluate =  make_evaluate(accuracy_vector)
 
 # Instantiate config files with instance specifics
-nsga_cfg = NSGAConfig(n_features = n_features, evaluate = nsga_evaluate)
+nsga_cfg = NSGAConfig(n_features = n_features, evaluate = nsga_evaluate, mutation_rate = 1/n_features)
 pso_cfg = PSOConfig(
     num_particles = 100,
     num_features = n_features,

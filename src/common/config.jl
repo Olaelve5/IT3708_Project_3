@@ -14,8 +14,8 @@ end
     tournament_size::Int = 3
     n_features::Int
     evaluate::Function
-    crossover_rate::Float = 0.9
-    mutation_rate::Float = 1/n_features
+    crossover_rate::Float64 = 0.9
+    mutation_rate::Float64
 end
 
 @with_kw struct PSOConfig
