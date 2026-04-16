@@ -1,5 +1,4 @@
 function make_evaluate(fitness_landscape::Vector{Float64})
-    max_idx = length(fitness_landscape)
     
     function evaluate(position::BitVector)::Float64
         index = 0
