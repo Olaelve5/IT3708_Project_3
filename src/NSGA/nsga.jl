@@ -6,7 +6,7 @@ include("crowding_distance.jl")
 include("selection.jl")
 
 function run_nsga(cfg::NSGAConfig)
-    @unpack pop_size, n_features, evaluate, tournament_size, crossover_rate, mutation_rate = cfg
+    @unpack pop_size, num_gens, n_features, evaluate, tournament_size, crossover_rate, mutation_rate = cfg
 
     # Define genetic operators
     SELECTOR = NSGATournament(tournament_size)
@@ -26,8 +26,8 @@ function run_nsga(cfg::NSGAConfig)
     new_parents = Vector{Individual}(undef, pop_size)
 
 
-    finished = false
-    while !finished
+    gen = 1
+    while gen <= num_gens
         # Combine parent + offspring populations
         for i in 1:pop_size
             population[i] = parents[i]
@@ -67,9 +67,7 @@ function run_nsga(cfg::NSGAConfig)
         generate_offspring!(new_parents, offspring, SELECTOR, crossover_rate, MUTATOR, evaluate)
 
         parents .= new_parents
-        if something
-            finished = true
-        end
+        gen += 1
     end
     return parents
 end
