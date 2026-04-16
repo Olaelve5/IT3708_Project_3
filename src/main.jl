@@ -4,6 +4,7 @@ include("common/config.jl")
 include("NSGA/nsga.jl")
 include("PSO/pso.jl")
 include("./common/config.jl")
+include("./common/generate_synthetic.jl")
 
 using .PSO
 
@@ -11,7 +12,8 @@ using .PSO
 data_path = "./train_data/01-breast-w_lr_F.h5" # 01-breast-w_lr_F.h5 | 05-credit-a_rf_F.h5 | 08-letter-r_knn_F.h5
 
 # Get fitness landscape and number of instance features from dataset
-accuracy_vector, fitness_landscape, n_features = parse_file(data_path)
+#accuracy_vector, fitness_landscape, n_features = parse_file(data_path)
+accuracy_vector, fitness_landscape, n_features = generate_synthetic_fitness_landscape()
 
 # Make and evaluate function that remembers fitness landscape
 evaluate = make_evaluate(fitness_landscape)
