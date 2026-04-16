@@ -8,7 +8,7 @@ function parse_file(filepath)
 
     epsilon = 0.01
     num_combinations = size(accuracy_matrix, 1)
-    num_features = log2(num_combinations+1)
+    num_features = Int(log2(num_combinations+1))
 
     # 1D array to store the final fitness values
     fitness_landscape = Vector{Float64}(undef, num_combinations)
