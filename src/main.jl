@@ -26,7 +26,7 @@ pso_cfg = PSOConfig(
     num_features = n_features,
     num_iterations = 10000,
     inertia_weight = 1,
-    cognitive_coefficient = 10,
+    cognitive_coefficient = 1,
     social_coefficient = 1,
     evaluate = evaluate
 )
