@@ -63,6 +63,8 @@ function run_nsga(cfg::NSGAConfig)
             i += 1
         end
 
+        # Update crowding_distance of new_parents, rank should stay correct
+        crowding_distance!(new_parents)
         # Generate offspring for next generation
         generate_offspring!(new_parents, offspring, SELECTOR, crossover_rate, MUTATOR, evaluate)
 
