@@ -60,8 +60,9 @@ config = SGAConfig(
     elitism = true
 )
 
-#landscape, N_FEATURES = parse_file("train_data/05-credit-a_rf_F.h5")
-landscape, N_FEATURES = parse_file("train_data/01-breast-w_lr_F.h5")
+#landscape = parse_file("train_data/01-breast-w_lr_F.h5")
+#landscape, _ = parse_file("train_data/05-credit-a_rf_F.h5")
+acc_vec, landscape, N_FEATURES = parse_file("train_data/08-letter-r_knn_F.h5")
 eval_func = make_evaluate(landscape)
 
 best_solution, best_fitness = SGA(config, eval_func, Int(N_FEATURES))
