@@ -11,6 +11,7 @@ function fnd_sort!(population::Vector{Individual}, pop_size::Int)
     for p in population
         p.n_p = 0
         empty!(p.S_p)
+        p.rank = typemax(Int)
     end
 
     Fi = Individual[]
