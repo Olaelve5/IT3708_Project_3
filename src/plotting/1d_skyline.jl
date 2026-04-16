@@ -2,7 +2,9 @@ using Plots
 include("../common/parse_data.jl")
 include("./calculate_optimas.jl")
 
-landscape, _ = parse_file("train_data/05-credit-a_rf_F.h5")
+_, landscape, _ = parse_file("train_data/01-breast-w_lr_F.h5")
+#_, landscape, _ = parse_file("train_data/05-credit-a_rf_F.h5")
+#_, landscape, _ = parse_file("train_data/08-letter-r_knn_F.h5")
 
 n_combinations = length(landscape)
 n_features = round(Int, log2(n_combinations + 1)) 
