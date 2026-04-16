@@ -21,12 +21,14 @@ function SGA(config::SGAConfig, eval_func::Function, num_features::Int)
         best_idx = argmax(fitnesses)
         best_gen_fitness = fitnesses[best_idx]
         champion = copy(population[best_idx])
-        println("Generation $gen | Best Fitness: $best_gen_fitness")
+        avg_fitness = mean(fitnesses)
+        println("Generation $gen | Best Fitness: $best_gen_fitness | Average Fitness: $avg_fitness")
         
         new_population = elitism ? BitVector[champion] : BitVector[]
+        num_children = elitism ? pop_size - 1 : pop_size
         
-        for _ in 1:pop_size
-            parent_indices = select(S, fitnesses)
+        for _ in 1:num_children
+            parent_indices = select(S, .-fitnesses)
 
             if rand() < crossover_rate
                 child = cross(C, population[parent_indices[1]], population[parent_indices[2]])
@@ -52,16 +54,19 @@ end
 
 
 config = SGAConfig(
-    pop_size = 1000,
+    pop_size = 100,
     num_gens = 1000,
-    tournament_size = 5,
+    tournament_size = 3,
     mutation_rate = 0.01,
-    crossover_rate = 0.8,
-    elitism = true
+    crossover_rate = 0.9,
+    elitism = false
 )
 
-#landscape, N_FEATURES = parse_file("train_data/05-credit-a_rf_F.h5")
-landscape, N_FEATURES = parse_file("train_data/01-breast-w_lr_F.h5")
+#landscape = parse_file("train_data/01-breast-w_lr_F.h5")
+#landscape, _ = parse_file("train_data/05-credit-a_rf_F.h5")
+#acc_vec, landscape, N_FEATURES = parse_file("train_data/08-letter-r_knn_F.h5")
+#acc_vec, landscape, N_FEATURES = parse_file("train_data/05-credit-a_rf_F.h5")
+acc_vec, landscape, N_FEATURES = parse_file("train_data/01-breast-w_lr_F.h5")
 eval_func = make_evaluate(landscape)
 
 best_solution, best_fitness = SGA(config, eval_func, Int(N_FEATURES))

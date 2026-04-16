@@ -1,12 +1,11 @@
 using HDF5
 using Statistics
 
-function parse_file(filepath)
+function parse_file(filepath; epsilon=0.01)
     file = h5open(filepath, "r")
     accuracy_matrix = read(file["accuracies"])
     close(file)
 
-    epsilon = 0.01
     num_combinations = size(accuracy_matrix, 1)
     num_features = Int(log2(num_combinations+1))
 
