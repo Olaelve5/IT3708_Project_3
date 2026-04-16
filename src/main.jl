@@ -2,8 +2,7 @@ include("common/parse_data.jl")
 include("common/evaluation.jl")
 include("common/config.jl")
 include("NSGA/nsga.jl")
-include("PSO/pso.jl")
-include("./common/config.jl")
+include("pso/pso.jl")
 
 # using .PSO
 
