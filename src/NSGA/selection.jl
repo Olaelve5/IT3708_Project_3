@@ -53,6 +53,7 @@ function generate_offspring!(
     # Mutate all offspring with mutation_rate chance per gene
     for p in offspring
         p.genome = EvoLP.mutate(MUTATOR, p.genome)
+        ensure_nonempty_genome!(p.genome)
         p.accuracy = evaluate(p.genome)
         p.num_features = count(p.genome)
     end

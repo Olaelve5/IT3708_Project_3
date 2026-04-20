@@ -7,9 +7,11 @@ include("selection.jl")
 include("prints.jl")
 
 function run_nsga(cfg::NSGAConfig)
-    @unpack pop_size, num_gens, n_features, evaluate, tournament_size, crossover_rate, mutation_rate, log_every = cfg
+    @unpack pop_size, num_gens, n_features, evaluate, tournament_size, crossover_rate, mutation_rate, log_every, verbose = cfg
 
-    print_run_header(cfg)
+    if verbose
+        print_run_header(cfg)
+    end
 
     # Define genetic operators
     SELECTOR = NSGATournament(tournament_size)
@@ -38,7 +40,9 @@ function run_nsga(cfg::NSGAConfig)
     push!(f1_size_by_gen, initial_stats.size)
     push!(best_accuracy_by_gen, initial_stats.best_accuracy)
     push!(min_features_by_gen, initial_stats.min_features)
-    print_generation_summary("NSGA-II", 0, initial_front)
+    if verbose
+        print_generation_summary("NSGA-II", 0, initial_front)
+    end
 
     gen = 1
     while gen <= num_gens
@@ -90,7 +94,7 @@ function run_nsga(cfg::NSGAConfig)
         push!(best_accuracy_by_gen, current_stats.best_accuracy)
         push!(min_features_by_gen, current_stats.min_features)
 
-        if gen % log_every == 0 || gen == num_gens
+        if verbose && (gen % log_every == 0 || gen == num_gens)
             print_generation_summary("NSGA-II", gen, current_front)
         end
 
@@ -98,7 +102,9 @@ function run_nsga(cfg::NSGAConfig)
     end
 
     final_front = rank1_front(parents)
-    print_final_summary(final_front)
+    if verbose
+        print_final_summary(final_front)
+    end
 
     return (
         final_population = parents,
