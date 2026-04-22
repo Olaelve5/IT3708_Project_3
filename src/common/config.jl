@@ -34,5 +34,7 @@ if !isdefined(@__MODULE__, :PSOConfig)
         cognitive_coefficient::Float64 = 1.5
         social_coefficient::Float64 = 1.5
         evaluate::Function
+        log_every::Int = 1
+        verbose::Bool = true
     end
 end
