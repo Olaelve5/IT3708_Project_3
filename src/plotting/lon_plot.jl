@@ -4,16 +4,28 @@ include("./calculate_optimas.jl")
 
 println("Parsing data...")
 
-_, landscape, _ = parse_file("train_data/01-breast-w_lr_F.h5")
+#_, landscape, _ = parse_file("train_data/01-breast-w_lr_F.h5")
 #_, landscape, _ = parse_file("train_data/05-credit-a_rf_F.h5")
 #_, landscape, _ = parse_file("train_data/08-letter-r_knn_F.h5")
+_, landscape, _ = parse_file("test_data/10-hepatitis_lr_F.h5", epsilon=0)
+#_, landscape, _ = parse_file("test_data/06-zoo_lr_F.h5", epsilon=0)
 
 n_combinations = length(landscape)
 n_features = round(Int, log2(n_combinations + 1)) 
 
-optima_indices = calculate_optimas(landscape)
-n_optima = length(optima_indices)
-println("Found $n_optima local optima!")
+# 1. Get ALL optima indices first
+all_optima_indices = calculate_optimas(landscape, n_features)[3]
+total_optima = length(all_optima_indices)
+println("Found $total_optima local optima!")
+
+# 2. Sort the indices based on their fitness scores in descending order
+sorted_order = sortperm(landscape[all_optima_indices], rev=true)
+sorted_optima_indices = all_optima_indices[sorted_order]
+
+# 3. Cap at 50 (or the total amount if there are fewer than 50)
+n_optima = min(50, total_optima)
+optima_indices = sorted_optima_indices[1:n_optima]
+println("Filtering to the top $n_optima optima for the network plot...")
 
 global_opt_idx = argmax(landscape)
 global_opt_val = landscape[global_opt_idx]
@@ -23,7 +35,7 @@ optima_fitnesses = landscape[optima_indices]
 
 println("Generating Local Optima Network...")
 
-p_lon = plot(title="Local Optima Network",
+p_lon = plot(title="Local Optima Network (Top $n_optima)",
              xlabel="Hamming Distance to Global Optimum",
              ylabel="Fitness Score",
              legend=false,

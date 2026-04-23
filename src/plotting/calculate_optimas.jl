@@ -1,5 +1,6 @@
-function calculate_optimas(landscape)
-    optima_indices = Int[]
+function calculate_optimas(landscape, n_features::Int)
+    local_optima_indices = Int[]
+    n_combinations = length(landscape)
 
     for i in 1:n_combinations
         is_local_optimum = true
@@ -19,8 +20,11 @@ function calculate_optimas(landscape)
         end
         
         if is_local_optimum
-            push!(optima_indices, i)
+            push!(local_optima_indices, i)
         end
     end
-    return optima_indices
+    
+    global_opt_fitness, global_opt_index = findmax(landscape)
+    
+    return global_opt_fitness, global_opt_index, local_optima_indices
 end

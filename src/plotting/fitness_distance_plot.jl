@@ -2,9 +2,12 @@ using Plots
 include("../common/parse_data.jl")
 
 println("Parsing data...")
-_, landscape, _ = parse_file("train_data/01-breast-w_lr_F.h5")
+#_, landscape, _ = parse_file("train_data/01-breast-w_lr_F.h5")
 #_, landscape, _ = parse_file("train_data/05-credit-a_rf_F.h5")
 #_, landscape, _ = parse_file("train_data/08-letter-r_knn_F.h5")
+
+_, landscape, _ = parse_file("test_data/10-hepatitis_lr_F.h5", epsilon=0)
+#_, landscape, _ = parse_file("test_data/06-zoo_lr_F.h5", epsilon=0)
 
 println("Calculating Fitness-Distance Correlation...")
 n_combinations = length(landscape)
