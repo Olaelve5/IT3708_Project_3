@@ -9,33 +9,37 @@ include("./common/generate_synthetic.jl")
 
 # Parameters
 data_path = "./train_data/05-credit-a_rf_F.h5" # 01-breast-w_lr_F.h5 | 05-credit-a_rf_F.h5 | 08-letter-r_knn_F.h5
+#data_path = "./06-zoo_lr_F.h5"
 
 # Get fitness landscape and number of instance features from dataset
 accuracy_vector, fitness_landscape, n_features = parse_file(data_path)
 #accuracy_vector, fitness_landscape, n_features = generate_synthetic_fitness_landscape()
+#accuracy_vector, fitness_landscape, n_features = generate_step6_asymmetric_synthetic_landscape()
 
 # Make an evaluate function that remembers fitness landscape
 evaluate = make_evaluate(fitness_landscape)
 nsga_evaluate =  make_evaluate(accuracy_vector)
-optimal_fitness = maximum(fitness_landscape)
+optimal_fitness = maximum(accuracy_vector)
+#optimal_fitness = maximum(fitness_landscape)
+println(optimal_fitness)
 
 # Instantiate config files with instance specifics
 nsga_cfg = NSGAConfig(n_features = n_features, evaluate = nsga_evaluate, mutation_rate = 1/n_features)
 pso_cfg = PSOConfig(
-    num_particles = 5,
+    num_particles = 100,
     num_features = n_features,
-    num_iterations = 100,
-    inertia_weight = 1,
-    cognitive_coefficient = 1,
-    social_coefficient = 1,
-    evaluate = evaluate,
+    num_iterations = 500,
+    inertia_weight = 0.7,
+    cognitive_coefficient = 1.5,
+    social_coefficient = 1.5,
+    evaluate = nsga_evaluate,
     log_every = 10,
     verbose = true
 )
 # TODO: SGA config
 
-nsga_run = run_nsga(nsga_cfg)
-println("NSGA-II returned $(length(nsga_run.pareto_front)) Pareto-front solutions.")
+#nsga_run = run_nsga(nsga_cfg)
+#println("NSGA-II returned $(length(nsga_run.pareto_front)) Pareto-front solutions.")
 
 pso_run = PSO.run_pso(pso_cfg)
 println("PSO best feature mask: ", pso_run.best_solution)
@@ -52,4 +56,7 @@ println("  Best iteration std:  ", round(pso_experiment.best_iteration.std, digi
 println("  Optimal fitness: ", round(optimal_fitness, digits = 6))
 println("  Success count: ", pso_experiment.success.count, "/", pso_experiment.num_runs)
 println("  Success rate: ", round(100 * pso_experiment.success.rate, digits = 2), "%")
+println("  Best ever fitness: ", round(pso_experiment.best_ever.fitness, digits = 6))
+println("  Best ever genome: ", pso_experiment.best_ever.genome)
+println("  Best ever bitstring: ", pso_experiment.best_ever.bitstring)
 # TODO: Call SGA

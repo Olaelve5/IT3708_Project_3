@@ -95,6 +95,9 @@ function run_pso_experiment(
     best_iterations = Int[]
     success_count = 0
 
+    best_ever_fitness = -Inf
+    best_ever_genome = nothing
+
     println("Running PSO $num_runs times on '$dataset_name'...")
 
     for _ in 1:num_runs
@@ -102,12 +105,22 @@ function run_pso_experiment(
         push!(run_results, result)
         push!(best_fitnesses, result.best_fitness)
         push!(best_iterations, result.best_iteration)
+
+        if result.best_fitness > best_ever_fitness
+            best_ever_fitness = result.best_fitness
+            best_ever_genome = copy(result.best_solution)
+        end
+
         if !isnothing(optimal_fitness) && isapprox(result.best_fitness, optimal_fitness; atol = atol, rtol = 0.0)
             success_count += 1
         end
+
         print(".")
     end
     println()
+
+    best_ever_bitstring =
+        isnothing(best_ever_genome) ? nothing : join(Int.(best_ever_genome))
 
     return (
         dataset_name = dataset_name,
@@ -120,6 +133,11 @@ function run_pso_experiment(
         best_iteration = (
             mean = mean(best_iterations),
             std = std(best_iterations),
+        ),
+        best_ever = (
+            genome = best_ever_genome,
+            bitstring = best_ever_bitstring,
+            fitness = best_ever_fitness,
         ),
         success = (
             count = success_count,
