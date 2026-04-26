@@ -2,6 +2,8 @@ struct PSORunResult
     best_solution::BitVector
     best_fitness::Float64
     best_iteration::Int
+    avg_fitness_history::Vector{Float64}
+    best_fitness_history::Vector{Float64}
 end
 
 function initialize_particle(config::PSOConfig)::Particle
@@ -50,6 +52,9 @@ function run_pso(config::PSOConfig)::PSORunResult
     best_fitness = config.evaluate(swarm.global_best)
     best_iteration = 0
 
+    avg_fitness_history = Float64[]
+    best_fitness_history = Float64[]
+
     for iter in 1:config.num_iterations
         if config.verbose && config.log_every > 0 && (iter == 1 || iter % config.log_every == 0)
             println("Iteration: ", iter)
@@ -61,14 +66,26 @@ function run_pso(config::PSOConfig)::PSORunResult
         end
         update_global_best!(swarm, config)
 
+        particle_fitnesses = [config.evaluate(p.position) for p in swarm.particles]
+        current_avg_fitness = mean(particle_fitnesses)
         current_best_fitness = config.evaluate(swarm.global_best)
+
+        push!(avg_fitness_history, current_avg_fitness)
+        push!(best_fitness_history, current_best_fitness)
+    
         if current_best_fitness > best_fitness
             best_fitness = current_best_fitness
             best_iteration = iter
         end
     end
 
-    return PSORunResult(copy(swarm.global_best), best_fitness, best_iteration)
+    return PSORunResult(
+        copy(swarm.global_best),
+        best_fitness,
+        best_iteration,
+        avg_fitness_history,
+        best_fitness_history
+    )
 end
 
 function run_pso_experiment(
