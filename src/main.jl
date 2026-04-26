@@ -37,7 +37,6 @@ pso_cfg = PSOConfig(
     log_every = 10,
     verbose = true
 )
-# TODO: SGA config
 
 
 pso_experiment = PSO.run_pso_experiment(pso_cfg, 10; dataset_name = data_path, optimal_fitness = optimal_fitness)
@@ -52,7 +51,6 @@ println("  Success rate: ", round(100 * pso_experiment.success.rate, digits = 2)
 println("  Best ever fitness: ", round(pso_experiment.best_ever.fitness, digits = 6))
 println("  Best ever genome: ", pso_experiment.best_ever.genome)
 println("  Best ever bitstring: ", pso_experiment.best_ever.bitstring)
-# TODO: Call SGA
 
 # Datasets to run NSGA on, comment out unwanted
 datasets = [
