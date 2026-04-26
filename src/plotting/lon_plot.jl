@@ -1,14 +1,18 @@
 using Plots
 include("../common/parse_data.jl")
 include("./calculate_optimas.jl")
+include("../common/evaluation.jl")
+include("../common/generate_synthetic.jl")
 
 println("Parsing data...")
 
 #_, landscape, _ = parse_file("train_data/01-breast-w_lr_F.h5")
 #_, landscape, _ = parse_file("train_data/05-credit-a_rf_F.h5")
 #_, landscape, _ = parse_file("train_data/08-letter-r_knn_F.h5")
-_, landscape, _ = parse_file("test_data/10-hepatitis_lr_F.h5", epsilon=0)
+#_, landscape, _ = parse_file("test_data/10-hepatitis_lr_F.h5", epsilon=0)
 #_, landscape, _ = parse_file("test_data/06-zoo_lr_F.h5", epsilon=0)
+#acc_vec, landscape, N_FEATURES = generate_test_synthetic()
+acc_vec, landscape, N_FEATURES = generate_train_synthetic()
 
 n_combinations = length(landscape)
 n_features = round(Int, log2(n_combinations + 1)) 
@@ -22,10 +26,12 @@ println("Found $total_optima local optima!")
 sorted_order = sortperm(landscape[all_optima_indices], rev=true)
 sorted_optima_indices = all_optima_indices[sorted_order]
 
-# 3. Cap at 50 (or the total amount if there are fewer than 50)
-n_optima = min(50, total_optima)
-optima_indices = sorted_optima_indices[1:n_optima]
-println("Filtering to the top $n_optima optima for the network plot...")
+# 3. Take a representative cross-section of 50 optima instead of just the top plateau
+n_optima = min(4000, total_optima)
+step_indices = round.(Int, range(1, total_optima, length=n_optima))
+optima_indices = sorted_optima_indices[step_indices]
+
+println("Filtering to a representative sample of $n_optima optima for the network plot...")
 
 global_opt_idx = argmax(landscape)
 global_opt_val = landscape[global_opt_idx]
@@ -34,13 +40,19 @@ distances_to_global = [count_ones(idx ⊻ global_opt_idx) for idx in optima_indi
 optima_fitnesses = landscape[optima_indices]
 
 println("Generating Local Optima Network...")
+min_y = minimum(optima_fitnesses)
+max_y = maximum(optima_fitnesses)
 
-p_lon = plot(title="Local Optima Network (Top $n_optima)",
+# Create a small dynamic padding
+y_padding = max(0.05, (max_y - min_y) * 0.1) 
+
+p_lon = plot(title="Local Optima Network (Cross-Section of $n_optima)",
              xlabel="Hamming Distance to Global Optimum",
              ylabel="Fitness Score",
              legend=false,
              grid=true,
-             size=(900, 600))
+             size=(900, 600),
+             ylims=(min_y - y_padding, max_y + y_padding))
 
 
 max_jump_distance = 3 

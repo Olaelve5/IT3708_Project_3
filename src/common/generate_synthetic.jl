@@ -1,4 +1,4 @@
-function generate_synthetic_fitness_landscape(;m::Int = 1, s::Int = 4, n::Int = 16, epsilon = 0.01)
+function generate_train_synthetic(;m::Int = 1, s::Int = 4, n::Int = 16, epsilon = 0.01)
   function g(b::Int)
     if b % s == 0
       return m * s
@@ -13,9 +13,6 @@ function generate_synthetic_fitness_landscape(;m::Int = 1, s::Int = 4, n::Int = 
     end
     return m * (segment * s - b)
   end
-
-  # Keep indexing compatible with parse_file/make_evaluate:
-  # i = 1..(2^n - 1), where i is the decimal bit-mask representation.
   indices = 1:(2^n - 1)
   accuracy_vector = [Float64(triangle(count_ones(i))) for i in indices]
   fitness_landscape = [Float64(triangle(count_ones(i))) - epsilon * count_ones(i) for i in indices]
@@ -23,18 +20,19 @@ function generate_synthetic_fitness_landscape(;m::Int = 1, s::Int = 4, n::Int = 
   return accuracy_vector, fitness_landscape, n
 end
 
-function generate_step6_asymmetric_synthetic_landscape(;n::Int = 31, epsilon = 0.0)
+function generate_test_synthetic(;n::Int = 31, epsilon = 0.0)
   if n != 31
     error("Step 6 asymmetric synthetic landscape is defined for n = 31 in the assignment test description.")
   end
-
-  # From the test data description (index = number of active bits):
-  # [0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0, 6]
   by_active_bits = UInt8[0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0, 6]
 
-  indices = 1:(2^n - 1)
-  accuracy_vector = [Float64(by_active_bits[count_ones(i) + 1]) for i in indices]
-  fitness_landscape = [Float64(by_active_bits[count_ones(i) + 1]) - epsilon * count_ones(i) for i in indices]
+  num_elements = 2^n - 1
+  
+  fitness_landscape = Vector{UInt8}(undef, num_elements)
 
-  return accuracy_vector, fitness_landscape, n
+  for i in 1:num_elements
+      fitness_landscape[i] = by_active_bits[count_ones(i) + 1]
+  end
+
+  return fitness_landscape, fitness_landscape, n
 end
