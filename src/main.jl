@@ -67,9 +67,8 @@ datasets = [
     (name = "synthetic-triangle-test", loader = () -> generate_step6_asymmetric_synthetic_landscape()),
 ]
 
-<<<<<<< Updated upstream
 # NSGA plotting:
 # plot_nsga_fitness_progression(datasets[7]; num_gens = 100)
 
 # Run multiple nsga and gather statistics:
-run_multiple_experiments_nsga(datasets; num_runs = 10)
+# run_multiple_experiments_nsga(datasets; num_runs = 10)
