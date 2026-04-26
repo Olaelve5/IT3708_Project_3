@@ -10,8 +10,8 @@ include("./common/generate_synthetic.jl")
 include("./plotting/fitness_plot.jl")
 
 # Parameters
-#data_path = "./train_data/05-credit-a_rf_F.h5" # 01-breast-w_lr_F.h5 | 05-credit-a_rf_F.h5 | 08-letter-r_knn_F.h5
-data_path = "./10-hepatitis_lr_F.h5"
+data_path = "./train_data/05-credit-a_rf_F.h5" # 01-breast-w_lr_F.h5 | 05-credit-a_rf_F.h5 | 08-letter-r_knn_F.h5
+#data_path = "./10-hepatitis_lr_F.h5"
 
 # Get fitness landscape and number of instance features from dataset
 accuracy_vector, fitness_landscape, n_features = parse_file(data_path)
@@ -19,9 +19,9 @@ accuracy_vector, fitness_landscape, n_features = parse_file(data_path)
 #accuracy_vector, fitness_landscape, n_features = generate_test_synthetic()
 
 # Make an evaluate function that remembers fitness landscape
-#evaluate = make_evaluate(fitness_landscape)
-nsga_evaluate =  make_evaluate(accuracy_vector)
-optimal_fitness = maximum(accuracy_vector)
+evaluate = make_evaluate(fitness_landscape)
+#nsga_evaluate =  make_evaluate(accuracy_vector)
+optimal_fitness = maximum(fitness_landscape)
 #optimal_fitness = maximum(fitness_landscape)
 println(optimal_fitness)
 
@@ -33,26 +33,24 @@ pso_cfg = PSOConfig(
     inertia_weight = 0.7,
     cognitive_coefficient = 1.5,
     social_coefficient = 1.5,
-    evaluate = nsga_evaluate,
+    evaluate = evaluate,
     log_every = 10,
     verbose = true
 )
-# TODO: SGA config
 
 
-# pso_experiment = PSO.run_pso_experiment(pso_cfg, 10; dataset_name = data_path, optimal_fitness = optimal_fitness)
-# println("PSO over $(pso_experiment.num_runs) runs:")
-# println("  Best fitness mean: ", round(pso_experiment.best_fitness.mean, digits = 6))
-# println("  Best fitness std:  ", round(pso_experiment.best_fitness.std, digits = 6))
-# println("  Best iteration mean: ", round(pso_experiment.best_iteration.mean, digits = 2))
-# println("  Best iteration std:  ", round(pso_experiment.best_iteration.std, digits = 2))
-# println("  Optimal fitness: ", round(optimal_fitness, digits = 6))
-# println("  Success count: ", pso_experiment.success.count, "/", pso_experiment.num_runs)
-# println("  Success rate: ", round(100 * pso_experiment.success.rate, digits = 2), "%")
-# println("  Best ever fitness: ", round(pso_experiment.best_ever.fitness, digits = 6))
-# println("  Best ever genome: ", pso_experiment.best_ever.genome)
-# println("  Best ever bitstring: ", pso_experiment.best_ever.bitstring)
-# TODO: Call SGA
+pso_experiment = PSO.run_pso_experiment(pso_cfg, 10; dataset_name = data_path, optimal_fitness = optimal_fitness)
+println("PSO over $(pso_experiment.num_runs) runs:")
+println("  Best fitness mean: ", round(pso_experiment.best_fitness.mean, digits = 6))
+println("  Best fitness std:  ", round(pso_experiment.best_fitness.std, digits = 6))
+println("  Best iteration mean: ", round(pso_experiment.best_iteration.mean, digits = 2))
+println("  Best iteration std:  ", round(pso_experiment.best_iteration.std, digits = 2))
+println("  Optimal fitness: ", round(optimal_fitness, digits = 6))
+println("  Success count: ", pso_experiment.success.count, "/", pso_experiment.num_runs)
+println("  Success rate: ", round(100 * pso_experiment.success.rate, digits = 2), "%")
+println("  Best ever fitness: ", round(pso_experiment.best_ever.fitness, digits = 6))
+println("  Best ever genome: ", pso_experiment.best_ever.genome)
+println("  Best ever bitstring: ", pso_experiment.best_ever.bitstring)
 
 # Datasets to run NSGA on, comment out unwanted
 datasets = [
