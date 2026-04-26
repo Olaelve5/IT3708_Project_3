@@ -112,7 +112,7 @@ function run_nsga(cfg::NSGAConfig)
     return (
         final_population = parents,
         pareto_front = final_front,
-        representative = representative_solution(final_front),
+        representative = best_solution(final_front),
         history = (
             f1_size_by_gen = f1_size_by_gen,
             best_accuracy_by_gen = best_accuracy_by_gen,
