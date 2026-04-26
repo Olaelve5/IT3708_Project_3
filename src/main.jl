@@ -4,6 +4,7 @@ include("common/config.jl")
 include("common/population.jl")
 include("NSGA/experiment.jl")
 include("NSGA/nsga.jl")
+include("NSGA/plotting.jl")
 include("pso/pso.jl")
 include("./common/generate_synthetic.jl")
 
@@ -67,8 +68,11 @@ datasets = [
 
     # Two synthetic landscapes from assignment material
     (name = "synthetic-triangle-train", loader = () -> generate_synthetic_fitness_landscape(m = 1, s = 4, n = 16, epsilon = 0.01)),
-    (name = "synthetic-triangle-step6-asymmetric", loader = () -> generate_step6_asymmetric_synthetic_landscape()),
+    (name = "synthetic-triangle-test", loader = () -> generate_step6_asymmetric_synthetic_landscape()),
 ]
 
-# Run NSGA
+# NSGA plotting:
+# plot_nsga_fitness_progression(datasets[7]; num_gens = 100)
+
+# Run multiple nsga and gather statistics:
 run_step5_experiments_nsga(datasets; num_runs = 10)
