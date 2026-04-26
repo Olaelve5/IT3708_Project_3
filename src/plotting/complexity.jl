@@ -2,16 +2,15 @@ using Plots
 include("../common/parse_data.jl")
 
 println("Parsing data...")
-_, landscape, _ = parse_file("train_data/01-breast-w_lr_F.h5")
-#_, landscape, _ = parse_file("train_data/05-credit-a_rf_F.h5")
-#_, landscape, _ = parse_file("train_data/08-letter-r_knn_F.h5")
+#_, landscape, _ = parse_file("train_data/01-breast-w_lr_F.h5")
+landscape, _, _ = parse_file("train_data/05-credit-a_rf_F.h5")
+#landscape, _, _ = parse_file("train_data/08-letter-r_knn_F.h5")
 n_combinations = length(landscape)
 
 feature_counts = Int[]
 fitnesses = Float64[]
 
 for i in 1:n_combinations
-    # count_ones(i) gives us exactly how many features are active in this combination
     push!(feature_counts, count_ones(i))
     push!(fitnesses, landscape[i])
 end

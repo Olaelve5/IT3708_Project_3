@@ -5,7 +5,7 @@ if !isdefined(@__MODULE__, :SGAConfig)
         pop_size::Int = 1000
         num_gens::Int = 50
         tournament_size::Int = 3
-        mutation_rate::Float64 = 0.01
+        mutation_rate::Float64
         crossover_rate::Float64 = 0.8
         elitism::Bool = true
     end

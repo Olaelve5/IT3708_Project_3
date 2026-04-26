@@ -7,26 +7,23 @@ include("../common/generate_synthetic.jl")
 println("Parsing data...")
 
 #_, landscape, _ = parse_file("train_data/01-breast-w_lr_F.h5")
-#_, landscape, _ = parse_file("train_data/05-credit-a_rf_F.h5")
+landscape, _, _ = parse_file("train_data/05-credit-a_rf_F.h5")
 #_, landscape, _ = parse_file("train_data/08-letter-r_knn_F.h5")
 #_, landscape, _ = parse_file("test_data/10-hepatitis_lr_F.h5", epsilon=0)
 #_, landscape, _ = parse_file("test_data/06-zoo_lr_F.h5", epsilon=0)
 #acc_vec, landscape, N_FEATURES = generate_test_synthetic()
-acc_vec, landscape, N_FEATURES = generate_train_synthetic()
+#acc_vec, landscape, N_FEATURES = generate_train_synthetic()
 
 n_combinations = length(landscape)
 n_features = round(Int, log2(n_combinations + 1)) 
 
-# 1. Get ALL optima indices first
 all_optima_indices = calculate_optimas(landscape, n_features)[3]
 total_optima = length(all_optima_indices)
 println("Found $total_optima local optima!")
 
-# 2. Sort the indices based on their fitness scores in descending order
 sorted_order = sortperm(landscape[all_optima_indices], rev=true)
 sorted_optima_indices = all_optima_indices[sorted_order]
 
-# 3. Take a representative cross-section of 50 optima instead of just the top plateau
 n_optima = min(4000, total_optima)
 step_indices = round.(Int, range(1, total_optima, length=n_optima))
 optima_indices = sorted_optima_indices[step_indices]
@@ -43,7 +40,6 @@ println("Generating Local Optima Network...")
 min_y = minimum(optima_fitnesses)
 max_y = maximum(optima_fitnesses)
 
-# Create a small dynamic padding
 y_padding = max(0.05, (max_y - min_y) * 0.1) 
 
 p_lon = plot(title="Local Optima Network (Cross-Section of $n_optima)",

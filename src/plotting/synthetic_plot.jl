@@ -1,6 +1,5 @@
 using Plots
 
-# The fitness values for n=31
 fitness_values = [0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0, 1, 2, 3, 4, 5, 4, 3, 2, 1, 0, 6]
 active_bits = 0:31
 

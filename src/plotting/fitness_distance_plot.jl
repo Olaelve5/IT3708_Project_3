@@ -27,7 +27,6 @@ distances = Int[]
 fitnesses = Float64[]
 
 for i in 1:n_combinations
-    # compute Hamming distance using XOR and count_ones
     dist = count_ones(i ⊻ global_opt_idx)
     
     push!(distances, dist)
