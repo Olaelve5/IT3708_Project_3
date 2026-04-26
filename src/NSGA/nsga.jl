@@ -33,12 +33,14 @@ function run_nsga(cfg::NSGAConfig)
     # Time-series used for experiment tables and plotting.
     f1_size_by_gen = Int[]
     best_accuracy_by_gen = Float64[]
+    avg_f1_accuracy_by_gen = Float64[]
     min_features_by_gen = Int[]
 
     initial_front = rank1_front(parents)
     initial_stats = front_stats(initial_front)
     push!(f1_size_by_gen, initial_stats.size)
     push!(best_accuracy_by_gen, initial_stats.best_accuracy)
+    push!(avg_f1_accuracy_by_gen, initial_stats.mean_accuracy)
     push!(min_features_by_gen, initial_stats.min_features)
     if verbose
         print_generation_summary("NSGA-II", 0, initial_front)
@@ -92,6 +94,7 @@ function run_nsga(cfg::NSGAConfig)
         current_stats = front_stats(current_front)
         push!(f1_size_by_gen, current_stats.size)
         push!(best_accuracy_by_gen, current_stats.best_accuracy)
+        push!(avg_f1_accuracy_by_gen, current_stats.mean_accuracy)
         push!(min_features_by_gen, current_stats.min_features)
 
         if verbose && (gen % log_every == 0 || gen == num_gens)
@@ -113,6 +116,7 @@ function run_nsga(cfg::NSGAConfig)
         history = (
             f1_size_by_gen = f1_size_by_gen,
             best_accuracy_by_gen = best_accuracy_by_gen,
+            avg_f1_accuracy_by_gen = avg_f1_accuracy_by_gen,
             min_features_by_gen = min_features_by_gen
         )
     )

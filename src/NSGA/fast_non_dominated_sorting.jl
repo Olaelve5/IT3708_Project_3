@@ -1,5 +1,3 @@
-
-
 function dominates(A::Individual, B::Individual)::Bool
     better_or_equal_all = (A.accuracy >= B.accuracy) && (A.num_features <= B.num_features)
     strictly_better_one = (A.accuracy > B.accuracy) || (A.num_features < B.num_features)
