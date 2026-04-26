@@ -1,6 +1,6 @@
 mutable struct Individual
     genome::BitVector
-    accuracy::Float64
+    accuracy::Number
     num_features::Int
     rank::Int # Assigned rank
     crowding_distance::Float64
@@ -15,7 +15,7 @@ function ensure_nonempty_genome!(genome::BitVector)
     return genome
 end
 
-function new_individual(chromosome::BitVector, accuracy::Float64)::Individual
+function new_individual(chromosome::BitVector, accuracy::Number)::Individual
     return Individual(chromosome, accuracy, count(chromosome), 0, 0.0, [], 0)
 end
 

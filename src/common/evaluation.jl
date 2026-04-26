@@ -1,6 +1,6 @@
 function make_evaluate(fitness_landscape::AbstractVector)
     
-    function evaluate(position::BitVector)::Float64
+    function evaluate(position::BitVector)
         index = 0
         for i in eachindex(position)
             if position[i]

@@ -2,9 +2,9 @@ include("common/parse_data.jl")
 include("common/evaluation.jl")
 include("common/config.jl")
 include("common/population.jl")
+include("NSGA/experiment.jl")
 include("NSGA/nsga.jl")
 include("pso/pso.jl")
-include("./common/config.jl")
 include("./common/generate_synthetic.jl")
 
 # Parameters
@@ -24,7 +24,6 @@ optimal_fitness = maximum(accuracy_vector)
 println(optimal_fitness)
 
 # Instantiate config files with instance specifics
-nsga_cfg = NSGAConfig(n_features = n_features, evaluate = nsga_evaluate, mutation_rate = 1/n_features)
 pso_cfg = PSOConfig(
     num_particles = 100,
     num_features = n_features,
@@ -38,14 +37,11 @@ pso_cfg = PSOConfig(
 )
 # TODO: SGA config
 
-#nsga_run = run_nsga(nsga_cfg)
-#println("NSGA-II returned $(length(nsga_run.pareto_front)) Pareto-front solutions.")
-
-pso_run = PSO.run_pso(pso_cfg)
-println("PSO best feature mask: ", pso_run.best_solution)
-println("PSO number of features selected: ", sum(pso_run.best_solution))
-println("PSO best fitness: ", pso_run.best_fitness)
-println("PSO best solution first found at iteration: ", pso_run.best_iteration)
+# pso_run = PSO.run_pso(pso_cfg)
+# println("PSO best feature mask: ", pso_run.best_solution)
+# println("PSO number of features selected: ", sum(pso_run.best_solution))
+# println("PSO best fitness: ", pso_run.best_fitness)
+# println("PSO best solution first found at iteration: ", pso_run.best_iteration)
 
 pso_experiment = PSO.run_pso_experiment(pso_cfg, 10; dataset_name = data_path, optimal_fitness = optimal_fitness)
 println("PSO over $(pso_experiment.num_runs) runs:")
@@ -60,3 +56,19 @@ println("  Best ever fitness: ", round(pso_experiment.best_ever.fitness, digits 
 println("  Best ever genome: ", pso_experiment.best_ever.genome)
 println("  Best ever bitstring: ", pso_experiment.best_ever.bitstring)
 # TODO: Call SGA
+
+# Datasets to run NSGA on, comment out unwanted
+datasets = [
+    (name = "06-zoo_lr_F", loader = () -> parse_file("test_data/06-zoo_lr_F.h5")),
+    (name = "10-hepatitis_lr_F", loader = () -> parse_file("test_data/10-hepatitis_lr_F.h5")),
+    (name = "01-breast-w", loader = () -> parse_file("train_data/01-breast-w_lr_F.h5")),
+    (name = "05-credit-a", loader = () -> parse_file("train_data/05-credit-a_rf_F.h5")),
+    (name = "08-letter-r", loader = () -> parse_file("train_data/08-letter-r_knn_F.h5")),
+
+    # Two synthetic landscapes from assignment material
+    (name = "synthetic-triangle-train", loader = () -> generate_synthetic_fitness_landscape(m = 1, s = 4, n = 16, epsilon = 0.01)),
+    (name = "synthetic-triangle-step6-asymmetric", loader = () -> generate_step6_asymmetric_synthetic_landscape()),
+]
+
+# Run NSGA
+run_step5_experiments_nsga(datasets; num_runs = 10)

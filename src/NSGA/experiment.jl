@@ -136,8 +136,8 @@ function print_experiment_summary(result::NamedTuple)
     println("  Median: $(round(result.best_accuracy.median, digits=6))")
     println()
     
-    println("Representative Solution (best accuracy from first run):")
-    rep = result.all_representatives[1]
+    println("Representative Solution (best accuracy across all runs):")
+    rep = sort(result.all_representatives, by = p -> (-p.accuracy, p.num_features))[1]
     println("  Accuracy: $(round(rep.accuracy, digits=6))")
     println("  Features: $(rep.num_features)")
     println("  Genome:   $(rep.genome)")
@@ -181,4 +181,34 @@ function export_results_table(
         write(f, "\\end{table}\n")
     end
     println("Results exported to $filename")
+end
+
+function run_step5_experiments_nsga(datasets; num_runs::Int)
+    experiment_results = NamedTuple[]
+
+    for dataset in datasets
+        dataset_name = dataset.name
+        println("\n" * "="^80)
+        println("Processing: $dataset_name")
+        println("="^80)
+
+        accuracy_vector, _, n_features = dataset.loader()
+        println("Max accuracy for $dataset_name: $(maximum(accuracy_vector))")
+        nsga_evaluate = make_evaluate(accuracy_vector)
+
+        nsga_cfg = NSGAConfig(
+            n_features = n_features,
+            evaluate = nsga_evaluate,
+            mutation_rate = 1 / n_features,
+            verbose = true,
+            log_every = 10
+        )
+
+        result = run_nsga_experiment(nsga_cfg, num_runs; dataset_name = dataset_name)
+        push!(experiment_results, result)
+        print_experiment_summary(result)
+    end
+
+    export_results_table(experiment_results; filename = "nsga_comparison_results.txt")
+    println("Comparison table saved to nsga_comparison_results.txt")
 end

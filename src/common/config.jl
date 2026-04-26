@@ -13,7 +13,7 @@ end
 
 if !isdefined(@__MODULE__, :NSGAConfig)
     @with_kw struct NSGAConfig
-        pop_size::Int = 50
+        pop_size::Int = 100
         num_gens::Int = 1000
         tournament_size::Int = 3
         n_features::Int
