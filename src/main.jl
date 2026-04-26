@@ -72,8 +72,4 @@ datasets = [
 # plot_nsga_fitness_progression(datasets[7]; num_gens = 100)
 
 # Run multiple nsga and gather statistics:
-run_step5_experiments_nsga(datasets; num_runs = 10)
-=======
-# Run NSGA
-#run_step5_experiments_nsga(datasets; num_runs = 10)
->>>>>>> Stashed changes
+run_multiple_experiments_nsga(datasets; num_runs = 10)
